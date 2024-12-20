@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "dev",
+            "request": "launch",
+            "showMemoryUsage": true,
+            "type": "dart",
+            "program": "app/lib/main_dev.dart",
+            "args": [
+                "--flavor",
+                "dev",
+            ]
+        },
+        {
+            "name": "hml",
+            "request": "launch",
+            "showMemoryUsage": true,
+            "type": "dart",
+            "program": "app/lib/main_hml.dart",
+            "args": [
+                "--flavor",
+                "hml",
+            ]
+        },
+        {
+            "name": "prod",
+            "request": "launch",
+            "showMemoryUsage": true,
+            "type": "dart",
+            "program": "app/lib/main_prod.dart",
+            "args": [
+                "--flavor",
+                "prod",
+            ]
+        },
+    ]
+}

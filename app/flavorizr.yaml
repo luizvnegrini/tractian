@@ -1,0 +1,22 @@
+flavors:
+  dev:
+    app:
+      name: "Tractian [Dev]"
+    android:
+      applicationId: "com.tractianapp.dev"
+    ios:
+      bundleId: "com.tractianapp.dev"
+  hml:
+    app:
+      name: "Tractian [Hml]"
+    android:
+      applicationId: "com.tractianapp.hml"
+    ios:
+      bundleId: "com.tractianapp.hml"
+  prod:
+    app:
+      name: "Tractian [Prod]"
+    android:
+      applicationId: "com.tractianapp.prod"
+    ios:
+      bundleId: "com.tractianapp.prod"
