@@ -1,10 +1,10 @@
-import 'base_entity.dart';
+import 'package:tractian/domain/domain.dart';
 
 class Asset extends BaseEntity {
   final String? locationId;
   final String? parentId;
   final String? sensorType;
-  final String? status;
+  final Status? status;
 
   Asset({
     required super.id,

@@ -1,6 +1,7 @@
 import 'package:external_dependencies/external_dependencies.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/core.dart';
 import '../presentation.dart';
 
 class CompaniesPage extends StatefulWidget {
@@ -58,7 +59,10 @@ class _CompaniesPageState extends State<CompaniesPage> {
                   itemBuilder: (context, index) {
                     final company = companies[index];
                     return ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () => context.go(
+                        Routes.assets,
+                        extra: company.id,
+                      ),
                       icon: Padding(
                         padding: const EdgeInsets.only(right: 5),
                         child: Image.asset(

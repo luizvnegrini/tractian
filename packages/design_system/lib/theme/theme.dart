@@ -10,6 +10,8 @@ ThemeData buildTheme() {
 
   return ThemeData(
     useMaterial3: true,
+    fontFamily: 'Roboto',
+    package: 'design_system',
     colorScheme: ColorScheme(
       brightness: Brightness.light,
       primary: colors.primary,

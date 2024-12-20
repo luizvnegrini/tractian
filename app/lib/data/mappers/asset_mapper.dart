@@ -9,7 +9,11 @@ class AssetMapper {
       locationId: model.locationId,
       parentId: model.parentId,
       sensorType: model.sensorType,
-      status: model.status,
+      status: switch (model.status) {
+        'critical' => Status.critical,
+        'operating' => Status.operating,
+        _ => null,
+      },
     );
   }
 }
