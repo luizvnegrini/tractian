@@ -3,7 +3,8 @@ import 'package:external_dependencies/external_dependencies.dart';
 import 'package:flutter/material.dart';
 
 import 'core/core.dart';
-import 'presentation/home/home_page.dart';
+import 'domain/domain.dart';
+import 'presentation/presentation.dart';
 
 class Startup {
   static Future<void> run() async {
@@ -28,7 +29,12 @@ class _App extends StatelessWidget {
     return MaterialApp(
       title: F.title,
       theme: buildTheme(),
-      home: HomePage(),
+      home: BlocProvider(
+        create: (context) => CompaniesPageBloc(
+          fetchData: GetIt.I.get<FetchCompanies>(),
+        ),
+        child: CompaniesPage(),
+      ),
     );
   }
 }

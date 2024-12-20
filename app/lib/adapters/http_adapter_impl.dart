@@ -16,8 +16,6 @@ class HttpAdapterImpl implements HttpAdapter {
       final responseBody = await response.transform(utf8.decoder).join();
 
       return jsonDecode(responseBody);
-    } catch (e) {
-      throw HttpException(e.toString());
     } finally {
       _http.close();
     }

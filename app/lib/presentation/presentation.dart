@@ -1,1 +1,1 @@
-export 'home/home.dart';
+export 'companies/companies.dart';
