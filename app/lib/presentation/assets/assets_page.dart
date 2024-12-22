@@ -83,11 +83,9 @@ class _AssetsPageState extends State<AssetsPage> {
                       : Icons.keyboard_arrow_right,
                   size: 20,
                 ),
-              const SizedBox(width: 8),
               if (node.type == NodeType.component &&
                   node.componentInfo?.status != null)
                 AssetsNodeViewModel.getStatusIcon(node.componentInfo!.status!),
-              const SizedBox(width: 8),
               AssetsNodeViewModel.getTypeIcon(node.type),
               const SizedBox(width: 8),
               Text(node.name),
