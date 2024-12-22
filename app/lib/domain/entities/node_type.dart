@@ -1,7 +1,5 @@
-enum Type {
+enum NodeType {
   location,
   asset,
   component;
-
-  const Type();
 }

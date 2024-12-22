@@ -1,6 +1,5 @@
 import 'package:external_dependencies/external_dependencies.dart';
 
-import '../../domain/domain.dart';
 import '../../presentation/presentation.dart';
 
 class Routes {
@@ -14,12 +13,7 @@ class AppModule {
         GoRoute(
           name: 'home',
           path: Routes.home,
-          builder: (_, __) => BlocProvider(
-            create: (context) => CompaniesPageBloc(
-              fetchData: GetIt.I.get<FetchCompanies>(),
-            ),
-            child: CompaniesPage(),
-          ),
+          builder: (_, __) => CompaniesPage(),
           routes: [
             GoRoute(
               name: 'assets',

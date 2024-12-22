@@ -4,14 +4,14 @@ class TreeNode {
   final String id;
   final String name;
   final List<TreeNode> children;
-  final Type type;
-  final Status? statusIcon;
+  final NodeType type;
+  final ComponentInfo? componentInfo;
 
   TreeNode({
     required this.id,
     required this.name,
     required this.type,
-    this.children = const [],
-    this.statusIcon,
+    this.componentInfo,
+    required this.children,
   });
 }

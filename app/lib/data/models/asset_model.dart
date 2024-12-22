@@ -4,6 +4,8 @@ class AssetModel extends BaseEntity {
   final String? locationId;
   final String? parentId;
   final String? sensorType;
+  final String? sensorId;
+  final String? gatewayId;
   final String? status;
 
   AssetModel({
@@ -12,6 +14,8 @@ class AssetModel extends BaseEntity {
     this.locationId,
     this.parentId,
     this.sensorType,
+    this.sensorId,
+    this.gatewayId,
     this.status,
   });
 
@@ -22,6 +26,8 @@ class AssetModel extends BaseEntity {
       locationId: json['locationId'],
       parentId: json['parentId'],
       sensorType: json['sensorType'],
+      sensorId: json['sensorId'],
+      gatewayId: json['gatewayId'],
       status: json['status'],
     );
   }

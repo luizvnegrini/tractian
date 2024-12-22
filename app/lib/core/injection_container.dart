@@ -14,18 +14,22 @@ void setupDependencyInjectionContainer() {
 
 void _setupDomain() {
   // Adapters
-  _instance.registerSingleton<HttpAdapter>(HttpAdapterImpl(HttpClient()));
+  _instance.registerFactory<HttpAdapter>(() => HttpAdapterImpl(HttpClient()));
 
   // Datasources
-  _instance.registerSingleton<TractianDatasource>(TractianDatasourceImpl(
-    httpClient: _instance(),
-  ));
+  _instance.registerFactory<TractianDatasource>(() => TractianDatasourceImpl(
+        httpClient: _instance(),
+      ));
 
   // Repositories
-  _instance.registerSingleton<TractianRepository>(TractianRepositoryImpl(
-    datasource: _instance(),
-  ));
+  _instance.registerFactory<TractianRepository>(() => TractianRepositoryImpl(
+        datasource: _instance(),
+      ));
 
   // Usecases
-  _instance.registerSingleton<FetchCompanies>(FetchDataImpl(_instance()));
+  _instance
+    ..registerFactory<BuildTreeNodes>(() => BuildTreeNodesImpl())
+    ..registerFactory<FetchCompanies>(() => FetchDataImpl(_instance()))
+    ..registerFactory<FetchAssets>(() => FetchAssetsImpl(_instance()))
+    ..registerFactory<FetchLocations>(() => FetchLocationsImpl(_instance()));
 }

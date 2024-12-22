@@ -1,6 +1,9 @@
 export 'asset.dart';
 export 'base_entity.dart';
 export 'company.dart';
+export 'component_info.dart';
 export 'location.dart';
+export 'node_type.dart';
+export 'sensor_type.dart';
 export 'status.dart';
-export 'type.dart';
+export 'tree_node.dart';
