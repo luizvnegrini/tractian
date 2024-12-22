@@ -20,7 +20,7 @@ class AssetsNodeViewModel {
     );
   }
 
-  static Widget _getStatusIcon(Status status) {
+  static Widget getStatusIcon(Status status) {
     final iconPath = switch (status) {
       Status.operating => 'assets/images/status_operating.png',
       Status.critical => 'assets/images/status_critical.png',
@@ -34,7 +34,7 @@ class AssetsNodeViewModel {
     );
   }
 
-  static Widget _getTypeIcon(NodeType type) {
+  static Widget getTypeIcon(NodeType type) {
     final iconPath = switch (type) {
       NodeType.location => 'assets/images/location.png',
       NodeType.asset => 'assets/images/asset.png',
