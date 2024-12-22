@@ -74,26 +74,23 @@ class _AssetsPageState extends State<AssetsPage> {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          TextField(
-            controller: _searchController,
-            focusNode: _searchFocusNode,
-            decoration: InputDecoration(
-              hintText: 'Buscar Ativo ou Local',
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
+          SizedBox(
+            height: 36,
+            child: TextField(
+              controller: _searchController,
+              focusNode: _searchFocusNode,
+              decoration: InputDecoration(
+                hintText: 'Buscar Ativo ou Local',
+                prefixIcon: const Icon(Icons.search),
               ),
-              filled: true,
-              fillColor: Colors.grey[100],
+              onChanged: (value) => _onSearchChanged(value),
+              onSubmitted: (value) {
+                _debounceTimer?.cancel();
+                _bloc.search(value, _selectedFilters);
+                _searchFocusNode.requestFocus();
+              },
+              textInputAction: TextInputAction.search,
             ),
-            onChanged: (value) => _onSearchChanged(value),
-            onSubmitted: (value) {
-              _debounceTimer?.cancel();
-              _bloc.search(value, _selectedFilters);
-              _searchFocusNode.requestFocus();
-            },
-            textInputAction: TextInputAction.search,
           ),
           const SizedBox(height: 8),
           Row(
@@ -302,14 +299,14 @@ class _FilterChip extends StatelessWidget {
             color: isSelected ? Colors.white : null,
           ),
           const SizedBox(width: 6),
-          Text(label),
+          Text(
+            label,
+            style: TextStyle(color: isSelected ? Colors.white : null),
+          ),
         ],
       ),
       selected: isSelected,
       onSelected: onSelected,
-      backgroundColor: Colors.transparent,
-      showCheckmark: false,
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
     );
   }
 }

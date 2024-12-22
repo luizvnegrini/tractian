@@ -20,7 +20,6 @@ dev_dependencies:
     sdk: flutter
   flutter_flavorizr: ^2.2.3
   mocktail: ^1.0.4
-
   flutter_lints: ^5.0.0
 
 flutter:

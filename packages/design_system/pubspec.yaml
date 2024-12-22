@@ -20,7 +20,7 @@ flutter:
   assets:
     - assets/images/
   fonts:
-    - family: Roboto Condensed
+    - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Black.ttf
         - asset: assets/fonts/Roboto-BlackItalic.ttf

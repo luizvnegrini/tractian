@@ -1,59 +1,66 @@
-import 'package:design_system/theme/colors.dart';
 import 'package:flutter/material.dart';
 
-extension ThemeExtensions on BuildContext {
-  ThemeColors get colors => ThemeColors();
-}
+import 'colors.dart';
 
-ThemeData buildTheme() {
-  final colors = ThemeColors();
-
-  return ThemeData(
-    useMaterial3: true,
-    fontFamily: 'Roboto',
-    package: 'design_system',
-    colorScheme: ColorScheme(
-      brightness: Brightness.light,
-      primary: colors.primary,
-      onPrimary: const Color(0xFFFFFFFF),
-      secondary: colors.secondary,
-      onSecondary: const Color(0xFF000000),
-      error: const Color(0xFFB22222),
-      onError: const Color(0xFFFFFFFF),
-      surface: const Color(0xFFF5F5DC),
-      onSurface: const Color(0xFF000000),
-    ),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFF6F4E37),
-      foregroundColor: Color(0xFFFFFFFF),
-      centerTitle: true,
-      elevation: 0,
-    ),
-    textTheme: const TextTheme(
-      displayLarge: TextStyle(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-        color: Color(0xFF6F4E37),
+class AppTheme {
+  static ThemeData get theme {
+    return ThemeData(
+      useMaterial3: true,
+      fontFamily: 'Roboto',
+      package: 'design_system',
+      colorScheme: const ColorScheme.light(
+        primary: ThemeColors.primary,
+        secondary: ThemeColors.secondary,
+        surface: ThemeColors.surface,
       ),
-      bodyLarge: TextStyle(
-        fontSize: 16,
-        color: Color(0xFF000000),
+      scaffoldBackgroundColor: ThemeColors.scaffoldBackground,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: ThemeColors.appBarBackground,
+        elevation: 0,
+        iconTheme: IconThemeData(color: ThemeColors.appBarIcon),
+        titleTextStyle: TextStyle(
+          color: ThemeColors.appBarTitle,
+          fontSize: 20,
+        ),
       ),
-      bodyMedium: TextStyle(
-        fontSize: 14,
-        color: Color(0xFF6F4E37),
+      chipTheme: ChipThemeData(
+        backgroundColor: Colors.transparent,
+        selectedColor: ThemeColors.chipSelected,
+        labelStyle: const TextStyle(color: ThemeColors.chipLabel),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        showCheckmark: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: const BorderSide(color: ThemeColors.chipBorder),
+        ),
       ),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFD2B48C),
-        foregroundColor: const Color(0xFF000000),
-        textStyle: const TextStyle(fontWeight: FontWeight.bold),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: ThemeColors.buttonBackground,
+          foregroundColor: ThemeColors.buttonForeground,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
       ),
-    ),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Color(0xFF6F4E37),
-      foregroundColor: Color(0xFFFFFFFF),
-    ),
-  );
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4),
+          borderSide: BorderSide.none,
+        ),
+        fillColor: ThemeColors.inputFill,
+        filled: true,
+        prefixIconColor: ThemeColors.inputPrefixIcon,
+        hintStyle: const TextStyle(
+          color: ThemeColors.inputHint,
+          fontSize: 14,
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      ),
+      dividerTheme: const DividerThemeData(
+        color: ThemeColors.divider,
+      ),
+    );
+  }
 }

@@ -73,13 +73,16 @@ class _CompaniesPageState extends State<CompaniesPage> {
                             height: 24,
                           ),
                         ),
-                        label: Text(company.name),
+                        label: Text(
+                          company.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         style: _buttonStyle,
                       );
                     },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(height: 40);
-                    },
+                    separatorBuilder: (_, __) => const SizedBox(height: 40),
                   ),
                 ),
               ),
