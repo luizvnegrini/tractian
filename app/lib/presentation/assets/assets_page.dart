@@ -68,7 +68,6 @@ class _AssetsPageState extends State<AssetsPage> {
         onTap: hasChildren ? () => _toggleNode(node) : null,
         child: Stack(
           children: [
-            // Linhas de escopo (dos pais)
             ...flatNode.scopingNodes.asMap().entries.map((entry) {
               final parentDepth = entry.key;
               return Positioned(
@@ -81,7 +80,6 @@ class _AssetsPageState extends State<AssetsPage> {
                 ),
               );
             }),
-            // Linha do nó atual quando expandido
             if (isExpanded)
               Positioned(
                 left: (depth * levelIndent) + (iconSize / 2),
@@ -101,21 +99,17 @@ class _AssetsPageState extends State<AssetsPage> {
                     Icon(
                       isExpanded
                           ? Icons.keyboard_arrow_down
-                          : Icons.keyboard_arrow_right,
+                          : Icons.chevron_right,
                       size: iconSize,
                     ),
                   if (!hasChildren) SizedBox(width: iconSize),
-                  const SizedBox(width: 4),
                   AssetsNodeViewModel.getTypeIcon(node.type),
                   const SizedBox(width: 4),
                   Text(node.name),
                   if (node.type == NodeType.component &&
                       node.componentInfo?.status != null)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: AssetsNodeViewModel.getStatusIcon(
-                          node.componentInfo!.status!),
-                    ),
+                    AssetsNodeViewModel.getStatusIcon(
+                        node.componentInfo!.status!),
                 ],
               ),
             ),
