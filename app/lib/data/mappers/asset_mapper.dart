@@ -12,7 +12,7 @@ class AssetMapper {
       sensorId: model.sensorId,
       gatewayId: model.gatewayId,
       status: switch (model.status) {
-        'critical' => Status.critical,
+        'alert' => Status.alert,
         'operating' => Status.operating,
         _ => null,
       },

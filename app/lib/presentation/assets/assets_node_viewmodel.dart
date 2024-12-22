@@ -23,7 +23,7 @@ class AssetsNodeViewModel {
   static Widget getStatusIcon(Status status) {
     final iconPath = switch (status) {
       Status.operating => 'assets/images/status_operating.png',
-      Status.critical => 'assets/images/status_critical.png',
+      Status.alert => 'assets/images/status_alert.png',
     };
 
     return Image.asset(
