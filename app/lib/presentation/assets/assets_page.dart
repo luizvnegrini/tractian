@@ -17,7 +17,6 @@ class AssetsPage extends StatefulWidget {
 class _AssetsPageState extends State<AssetsPage> {
   final Map<String, bool> _expandedNodes = {};
   static const double nodeHeight = 32.0;
-  static const double baseIndent = 16.0;
   static const double levelIndent = 20.0;
   static const double iconSize = 20.0;
 
@@ -73,7 +72,7 @@ class _AssetsPageState extends State<AssetsPage> {
             ...flatNode.scopingNodes.asMap().entries.map((entry) {
               final parentDepth = entry.key;
               return Positioned(
-                left: baseIndent + (parentDepth * levelIndent) + (iconSize / 2),
+                left: (parentDepth * levelIndent) + (iconSize / 2),
                 top: 0,
                 bottom: 0,
                 child: Container(
@@ -85,7 +84,7 @@ class _AssetsPageState extends State<AssetsPage> {
             // Linha do nó atual quando expandido
             if (isExpanded)
               Positioned(
-                left: baseIndent + (depth * levelIndent) + (iconSize / 2),
+                left: (depth * levelIndent) + (iconSize / 2),
                 top: nodeHeight,
                 bottom: 0,
                 child: Container(
@@ -97,7 +96,7 @@ class _AssetsPageState extends State<AssetsPage> {
               height: nodeHeight,
               child: Row(
                 children: [
-                  SizedBox(width: baseIndent + (depth * levelIndent)),
+                  SizedBox(width: (depth * levelIndent)),
                   if (hasChildren)
                     Icon(
                       isExpanded
