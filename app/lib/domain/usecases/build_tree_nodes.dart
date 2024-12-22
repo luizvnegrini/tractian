@@ -32,7 +32,8 @@ class BuildTreeNodesImpl implements BuildTreeNodes {
     final unlinkedNodes =
         unlinkedItems.map((asset) => _buildAssetNode(asset, assetMap)).toList();
 
-    return [...locationNodes, ...unlinkedNodes];
+    final result = [...locationNodes, ...unlinkedNodes];
+    return _sortNodesByChildren(result);
   }
 
   List<TreeNode> _buildLocationChildren(
@@ -59,7 +60,8 @@ class BuildTreeNodesImpl implements BuildTreeNodes {
         .map((asset) => _buildAssetNode(asset, assetMap))
         .toList();
 
-    return [...subLocationNodes, ...locationAssetNodes];
+    final result = [...subLocationNodes, ...locationAssetNodes];
+    return _sortNodesByChildren(result);
   }
 
   TreeNode _buildAssetNode(Asset asset, Map<String, Asset> assetMap) {
@@ -90,7 +92,9 @@ class BuildTreeNodesImpl implements BuildTreeNodes {
       String assetId, Map<String, Asset> assetMap) {
     final children =
         assetMap.values.where((asset) => asset.parentId == assetId);
-    return children.map((asset) => _buildAssetNode(asset, assetMap)).toList();
+    final nodes =
+        children.map((asset) => _buildAssetNode(asset, assetMap)).toList();
+    return _sortNodesByChildren(nodes);
   }
 
   SensorType _mapSensorType(String type) {
@@ -99,5 +103,14 @@ class BuildTreeNodesImpl implements BuildTreeNodes {
       'energy' => SensorType.energy,
       _ => throw Exception('Invalid sensor type: $type'),
     };
+  }
+
+  List<TreeNode> _sortNodesByChildren(List<TreeNode> nodes) {
+    return nodes
+      ..sort((a, b) {
+        if (a.children.isEmpty && b.children.isNotEmpty) return 1;
+        if (a.children.isNotEmpty && b.children.isEmpty) return -1;
+        return a.name.compareTo(b.name); // ordenação secundária por nome
+      });
   }
 }
