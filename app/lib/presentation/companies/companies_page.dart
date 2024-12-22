@@ -1,3 +1,4 @@
+import 'package:design_system/design_system.dart';
 import 'package:external_dependencies/external_dependencies.dart';
 import 'package:flutter/material.dart';
 
@@ -37,9 +38,8 @@ class _CompaniesPageState extends State<CompaniesPage> {
       )..fetch(),
       child: Scaffold(
         appBar: AppBar(
-          title: Image.asset(
-            'assets/images/logo.png',
-            package: 'design_system',
+          title: ImageAsset(
+            'logo.png',
             height: 17,
           ),
         ),
@@ -67,17 +67,14 @@ class _CompaniesPageState extends State<CompaniesPage> {
                         ),
                         icon: Padding(
                           padding: const EdgeInsets.only(right: 5),
-                          child: Image.asset(
-                            'assets/images/company.png',
-                            package: 'design_system',
+                          child: ImageAsset(
+                            'company.png',
                             height: 24,
                           ),
                         ),
                         label: Text(
                           company.name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         style: _buttonStyle,
                       );

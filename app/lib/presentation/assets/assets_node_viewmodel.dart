@@ -1,3 +1,4 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../domain/domain.dart';
@@ -22,13 +23,12 @@ class AssetsNodeViewModel {
 
   static Widget getStatusIcon(Status status) {
     final iconPath = switch (status) {
-      Status.operating => 'assets/images/status_operating.png',
-      Status.alert => 'assets/images/status_alert.png',
+      Status.operating => 'status_operating.png',
+      Status.alert => 'status_alert.png',
     };
 
-    return Image.asset(
+    return ImageAsset(
       iconPath,
-      package: 'design_system',
       height: 12,
       width: iconSize,
     );
@@ -36,14 +36,13 @@ class AssetsNodeViewModel {
 
   static Widget getTypeIcon(NodeType type) {
     final iconPath = switch (type) {
-      NodeType.location => 'assets/images/location.png',
-      NodeType.asset => 'assets/images/asset.png',
-      NodeType.component => 'assets/images/component.png',
+      NodeType.location => 'location.png',
+      NodeType.asset => 'asset.png',
+      NodeType.component => 'component.png',
     };
 
-    return Image.asset(
+    return ImageAsset(
       iconPath,
-      package: 'design_system',
       height: iconSize,
       width: iconSize,
     );

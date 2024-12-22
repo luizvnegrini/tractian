@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:design_system/design_system.dart';
 import 'package:external_dependencies/external_dependencies.dart';
 import 'package:flutter/material.dart';
 
@@ -97,14 +98,14 @@ class _AssetsPageState extends State<AssetsPage> {
             children: [
               _FilterChip(
                 label: 'Sensor de Energia',
-                iconPath: 'assets/images/filter_bolt.png',
+                iconPath: 'filter_bolt.png',
                 isSelected: isEnergySensorSelected,
                 onSelected: (_) => _onFilterSelected(FilterType.energySensor),
               ),
               const SizedBox(width: 8),
               _FilterChip(
                 label: 'Crítico',
-                iconPath: 'assets/images/filter_exclamation.png',
+                iconPath: 'filter_exclamation.png',
                 isSelected: isCriticalSelected,
                 onSelected: (_) => _onFilterSelected(FilterType.critical),
               ),
@@ -292,9 +293,8 @@ class _FilterChip extends StatelessWidget {
       label: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(
+          ImageAsset(
             iconPath,
-            package: 'design_system',
             height: 16,
             color: isSelected ? Colors.white : null,
           ),
