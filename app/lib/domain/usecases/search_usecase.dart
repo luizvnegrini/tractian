@@ -16,21 +16,43 @@ class SearchUsecaseImpl implements SearchUsecase {
     List<FilterType> filters,
   ) async {
     List<TreeNode> results = [];
-    List<TreeNode> stack = List.from(nodes);
 
-    while (stack.isNotEmpty) {
-      final node = stack.removeLast();
-      bool nodeMatches = _matchesSearchCriteria(node, query, filters);
-
-      if (nodeMatches) {
-        results.add(node);
-        continue;
+    for (var node in nodes) {
+      TreeNode? matchedNode = _searchNode(node, query, filters);
+      if (matchedNode != null) {
+        results.add(matchedNode);
       }
-
-      stack.addAll(node.children.reversed);
     }
 
     return results;
+  }
+
+  TreeNode? _searchNode(
+    TreeNode node,
+    String query,
+    List<FilterType> filters,
+  ) {
+    bool currentNodeMatches = _matchesSearchCriteria(node, query, filters);
+
+    List<TreeNode> matchedChildren = [];
+    for (var child in node.children) {
+      TreeNode? matchedChild = _searchNode(child, query, filters);
+      if (matchedChild != null) {
+        matchedChildren.add(matchedChild);
+      }
+    }
+
+    if (currentNodeMatches || matchedChildren.isNotEmpty) {
+      return TreeNode(
+        id: node.id,
+        name: node.name,
+        type: node.type,
+        componentInfo: node.componentInfo,
+        children: matchedChildren,
+      );
+    }
+
+    return null;
   }
 
   bool _matchesSearchCriteria(
