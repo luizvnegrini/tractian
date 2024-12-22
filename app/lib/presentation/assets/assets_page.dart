@@ -25,9 +25,7 @@ class _AssetsPageState extends State<AssetsPage> {
   static const double nodeHeight = 32.0;
   static const double levelIndent = 20.0;
   static const double iconSize = 20.0;
-  final Set<String> _selectedFilters = {};
-  static const String _energySensorFilter = 'energy_sensor';
-  static const String _criticalFilter = 'critical';
+  final List<FilterType> _selectedFilters = [];
 
   @override
   void initState() {
@@ -52,23 +50,25 @@ class _AssetsPageState extends State<AssetsPage> {
   void _onSearchChanged(String query) {
     _debounceTimer?.cancel();
     _debounceTimer = Timer(const Duration(seconds: 2), () {
-      _bloc.search(query);
+      _bloc.search(query, _selectedFilters);
     });
   }
 
-  void _toggleFilter(String filter, bool isSelected) {
+  void _onFilterSelected(FilterType filter) {
     setState(() {
-      if (isSelected) {
+      if (_selectedFilters.contains(filter)) {
         _selectedFilters.remove(filter);
       } else {
         _selectedFilters.add(filter);
       }
     });
+    _bloc.search(_searchController.text, _selectedFilters);
   }
 
   Widget _buildSearchBar() {
-    final isBoltChipSelected = _selectedFilters.contains('energy_sensor');
-    final isExclamationChipSelected = _selectedFilters.contains('critical');
+    final isEnergySensorSelected =
+        _selectedFilters.contains(FilterType.energySensor);
+    final isCriticalSelected = _selectedFilters.contains(FilterType.critical);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -90,7 +90,7 @@ class _AssetsPageState extends State<AssetsPage> {
             onChanged: (value) => _onSearchChanged(value),
             onSubmitted: (value) {
               _debounceTimer?.cancel();
-              _bloc.search(value);
+              _bloc.search(value, _selectedFilters);
               _searchFocusNode.requestFocus();
             },
             textInputAction: TextInputAction.search,
@@ -101,23 +101,15 @@ class _AssetsPageState extends State<AssetsPage> {
               _FilterChip(
                 label: 'Sensor de Energia',
                 iconPath: 'assets/images/filter_bolt.png',
-                isSelected: isBoltChipSelected,
-                onSelected: (_) {
-                  setState(() {
-                    _toggleFilter(_energySensorFilter, isBoltChipSelected);
-                  });
-                },
+                isSelected: isEnergySensorSelected,
+                onSelected: (_) => _onFilterSelected(FilterType.energySensor),
               ),
               const SizedBox(width: 8),
               _FilterChip(
                 label: 'Crítico',
                 iconPath: 'assets/images/filter_exclamation.png',
-                isSelected: isExclamationChipSelected,
-                onSelected: (_) {
-                  setState(() {
-                    _toggleFilter(_criticalFilter, isExclamationChipSelected);
-                  });
-                },
+                isSelected: isCriticalSelected,
+                onSelected: (_) => _onFilterSelected(FilterType.critical),
               ),
             ],
           ),

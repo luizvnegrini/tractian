@@ -42,19 +42,15 @@ class AssetsPageBloc extends BlocBase<AssetsPageState> {
     emit(Loaded(_allNodes));
   }
 
-  Future<void> search(String query) async {
+  Future<void> search(String query, List<FilterType> filters) async {
     emit(const AssetsPageState.loading());
 
-    await Future.delayed(
-      Duration(milliseconds: 250),
-    );
-
-    if (query.isEmpty) {
+    if (query.isEmpty && filters.isEmpty) {
       emit(Loaded(_allNodes));
       return;
     }
 
-    final filteredNodes = await searchUsecase(_allNodes, query.toLowerCase());
+    final filteredNodes = await searchUsecase(_allNodes, query, filters);
     emit(Loaded(_allNodes, filteredNodes: filteredNodes));
   }
 }
