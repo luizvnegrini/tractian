@@ -29,7 +29,7 @@ class AssetsNodeViewModel {
     return Image.asset(
       iconPath,
       package: 'design_system',
-      height: iconSize,
+      height: 12,
       width: iconSize,
     );
   }
