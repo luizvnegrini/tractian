@@ -31,5 +31,6 @@ void _setupDomain() {
     ..registerFactory<BuildTreeNodes>(() => BuildTreeNodesImpl())
     ..registerFactory<FetchCompanies>(() => FetchDataImpl(_instance()))
     ..registerFactory<FetchAssets>(() => FetchAssetsImpl(_instance()))
-    ..registerFactory<FetchLocations>(() => FetchLocationsImpl(_instance()));
+    ..registerFactory<FetchLocations>(() => FetchLocationsImpl(_instance()))
+    ..registerFactory<SearchUsecase>(() => SearchUsecaseImpl());
 }

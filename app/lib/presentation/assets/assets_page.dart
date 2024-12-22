@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:external_dependencies/external_dependencies.dart';
 import 'package:flutter/material.dart';
 
@@ -15,10 +17,114 @@ class AssetsPage extends StatefulWidget {
 }
 
 class _AssetsPageState extends State<AssetsPage> {
+  late final AssetsPageBloc _bloc;
   final Map<String, bool> _expandedNodes = {};
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+  Timer? _debounceTimer;
   static const double nodeHeight = 32.0;
   static const double levelIndent = 20.0;
   static const double iconSize = 20.0;
+  final Set<String> _selectedFilters = {};
+  static const String _energySensorFilter = 'energy_sensor';
+  static const String _criticalFilter = 'critical';
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = AssetsPageBloc(
+      buildTreeNodes: GetIt.I.get(),
+      fetchAssets: GetIt.I.get(),
+      fetchLocations: GetIt.I.get(),
+      searchUsecase: GetIt.I.get(),
+    )..fetch(widget.companyId);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    _debounceTimer?.cancel();
+    _bloc.close();
+    super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(seconds: 2), () {
+      _bloc.search(query);
+    });
+  }
+
+  void _toggleFilter(String filter, bool isSelected) {
+    setState(() {
+      if (isSelected) {
+        _selectedFilters.remove(filter);
+      } else {
+        _selectedFilters.add(filter);
+      }
+    });
+  }
+
+  Widget _buildSearchBar() {
+    final isBoltChipSelected = _selectedFilters.contains('energy_sensor');
+    final isExclamationChipSelected = _selectedFilters.contains('critical');
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          TextField(
+            controller: _searchController,
+            focusNode: _searchFocusNode,
+            decoration: InputDecoration(
+              hintText: 'Buscar Ativo ou Local',
+              prefixIcon: const Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: Colors.grey[100],
+            ),
+            onChanged: (value) => _onSearchChanged(value),
+            onSubmitted: (value) {
+              _debounceTimer?.cancel();
+              _bloc.search(value);
+              _searchFocusNode.requestFocus();
+            },
+            textInputAction: TextInputAction.search,
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              _FilterChip(
+                label: 'Sensor de Energia',
+                iconPath: 'assets/images/filter_bolt.png',
+                isSelected: isBoltChipSelected,
+                onSelected: (_) {
+                  setState(() {
+                    _toggleFilter(_energySensorFilter, isBoltChipSelected);
+                  });
+                },
+              ),
+              const SizedBox(width: 8),
+              _FilterChip(
+                label: 'Crítico',
+                iconPath: 'assets/images/filter_exclamation.png',
+                isSelected: isExclamationChipSelected,
+                onSelected: (_) {
+                  setState(() {
+                    _toggleFilter(_criticalFilter, isExclamationChipSelected);
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   void _toggleNode(TreeNode node) {
     setState(() {
@@ -62,93 +168,102 @@ class _AssetsPageState extends State<AssetsPage> {
     final hasChildren = node.children.isNotEmpty;
     final isExpanded = _expandedNodes[node.id] ?? false;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: hasChildren ? () => _toggleNode(node) : null,
-        child: Stack(
-          children: [
-            ...flatNode.scopingNodes.asMap().entries.map((entry) {
-              final parentDepth = entry.key;
-              return Positioned(
-                left: (parentDepth * levelIndent) + (iconSize / 2),
-                top: 0,
-                bottom: 0,
-                child: Container(
-                  width: 1,
-                  color: Colors.grey.shade300,
-                ),
-              );
-            }),
-            if (isExpanded)
-              Positioned(
-                left: (depth * levelIndent) + (iconSize / 2),
-                top: nodeHeight,
-                bottom: 0,
-                child: Container(
-                  width: 1,
-                  color: Colors.grey.shade300,
-                ),
+    return InkWell(
+      onTap: hasChildren ? () => _toggleNode(node) : null,
+      child: Stack(
+        children: [
+          ...flatNode.scopingNodes.asMap().entries.map((entry) {
+            final parentDepth = entry.key;
+            return Positioned(
+              left: (parentDepth * levelIndent) + (iconSize / 2),
+              top: 0,
+              bottom: 0,
+              child: Container(
+                width: 1,
+                color: Colors.grey.shade300,
               ),
-            SizedBox(
-              height: nodeHeight,
-              child: Row(
-                children: [
-                  SizedBox(width: (depth * levelIndent)),
-                  if (hasChildren)
-                    Icon(
-                      isExpanded
-                          ? Icons.keyboard_arrow_down
-                          : Icons.chevron_right,
-                      size: iconSize,
-                    ),
-                  if (!hasChildren) SizedBox(width: iconSize),
-                  AssetsNodeViewModel.getTypeIcon(node.type),
-                  const SizedBox(width: 4),
-                  Text(node.name),
-                  if (node.type == NodeType.component &&
-                      node.componentInfo?.status != null)
-                    AssetsNodeViewModel.getStatusIcon(
-                        node.componentInfo!.status!),
-                ],
+            );
+          }),
+          if (isExpanded)
+            Positioned(
+              left: (depth * levelIndent) + (iconSize / 2),
+              top: nodeHeight,
+              bottom: 0,
+              child: Container(
+                width: 1,
+                color: Colors.grey.shade300,
               ),
             ),
-          ],
-        ),
+          SizedBox(
+            height: nodeHeight,
+            child: Row(
+              children: [
+                SizedBox(width: (depth * levelIndent)),
+                if (hasChildren)
+                  Icon(
+                    isExpanded
+                        ? Icons.keyboard_arrow_down
+                        : Icons.chevron_right,
+                    size: iconSize,
+                  ),
+                if (!hasChildren) SizedBox(width: iconSize),
+                AssetsNodeViewModel.getTypeIcon(node.type),
+                const SizedBox(width: 4),
+                Text(node.name),
+                if (node.type == NodeType.component &&
+                    node.componentInfo?.status != null)
+                  AssetsNodeViewModel.getStatusIcon(
+                      node.componentInfo!.status!),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AssetsPageBloc(
-        buildTreeNodes: GetIt.I.get(),
-        fetchAssets: GetIt.I.get(),
-        fetchLocations: GetIt.I.get(),
-      )..fetch(widget.companyId),
+    return BlocProvider.value(
+      value: _bloc,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Assets'),
         ),
-        body: BlocBuilder<AssetsPageBloc, AssetsPageState>(
-          builder: (context, state) {
-            return state.maybeWhen(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              orElse: () => const Center(child: Text('No Assets Found')),
-              loaded: (nodes) {
-                final flattenedNodes = _buildFlattenedList(nodes);
-
-                return ListView.builder(
-                  itemCount: flattenedNodes.length,
-                  itemBuilder: (context, index) {
-                    final flatNode = flattenedNodes[index];
-                    return _buildNodeRow(flatNode);
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildSearchBar(),
+              Divider(),
+              Expanded(
+                child: BlocBuilder<AssetsPageBloc, AssetsPageState>(
+                  builder: (context, state) {
+                    return state.maybeWhen(
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      orElse: () =>
+                          const Center(child: Text('No Assets Found')),
+                      loaded: (nodes, filteredNodes, activeFilters) {
+                        final nodesToShow =
+                            filteredNodes.isEmpty ? nodes : filteredNodes;
+                        final flattenedNodes = _buildFlattenedList(
+                          nodesToShow,
+                          0,
+                          const [],
+                        );
+                        return ListView.builder(
+                          itemCount: flattenedNodes.length,
+                          itemBuilder: (context, index) {
+                            return _buildNodeRow(flattenedNodes[index]);
+                          },
+                        );
+                      },
+                    );
                   },
-                );
-              },
-            );
-          },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -167,4 +282,42 @@ class _FlatNode {
     this.scopingNodes,
     this.isExpanded,
   );
+}
+
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final String iconPath;
+  final bool isSelected;
+  final ValueChanged<bool> onSelected;
+
+  const _FilterChip({
+    required this.label,
+    required this.iconPath,
+    required this.isSelected,
+    required this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FilterChip(
+      label: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            iconPath,
+            package: 'design_system',
+            height: 16,
+            color: isSelected ? Colors.white : null,
+          ),
+          const SizedBox(width: 6),
+          Text(label),
+        ],
+      ),
+      selected: isSelected,
+      onSelected: onSelected,
+      backgroundColor: Colors.transparent,
+      showCheckmark: false,
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+    );
+  }
 }

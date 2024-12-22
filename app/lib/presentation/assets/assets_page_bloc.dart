@@ -8,11 +8,14 @@ class AssetsPageBloc extends BlocBase<AssetsPageState> {
   final FetchAssets fetchAssets;
   final FetchLocations fetchLocations;
   final BuildTreeNodes buildTreeNodes;
+  final SearchUsecase searchUsecase;
+  List<TreeNode> _allNodes = [];
 
   AssetsPageBloc({
     required this.fetchAssets,
     required this.fetchLocations,
     required this.buildTreeNodes,
+    required this.searchUsecase,
   }) : super(const AssetsPageState.initial());
 
   Future<void> fetch(String companyId) async {
@@ -23,22 +26,35 @@ class AssetsPageBloc extends BlocBase<AssetsPageState> {
       fetchLocations(companyId),
     ]);
 
-    final assetsResult = result[0];
-    final locationsResult = result[1];
-
     if (result.any((r) => r.isLeft())) {
-      emit(AssetsPageState.error('Error fetching data'));
+      emit(const AssetsPageState.error('Error fetching data'));
       return;
     }
 
-    final assets = assetsResult.toRight() as List<Asset>;
-    final locations = locationsResult.toRight() as List<Location>;
+    final assets = result[0].toRight() as List<Asset>;
+    final locations = result[1].toRight() as List<Location>;
 
-    final treeNodes = buildTreeNodes(
+    _allNodes = buildTreeNodes(
       locations: locations,
       assets: assets,
     );
 
-    emit(AssetsPageState.loaded(treeNodes));
+    emit(Loaded(_allNodes));
+  }
+
+  Future<void> search(String query) async {
+    emit(const AssetsPageState.loading());
+
+    await Future.delayed(
+      Duration(milliseconds: 250),
+    );
+
+    if (query.isEmpty) {
+      emit(Loaded(_allNodes));
+      return;
+    }
+
+    final filteredNodes = await searchUsecase(_allNodes, query.toLowerCase());
+    emit(Loaded(_allNodes, filteredNodes: filteredNodes));
   }
 }

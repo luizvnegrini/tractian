@@ -26,14 +26,21 @@ sealed class AssetsPageState {
     T Function()? initial,
     T Function()? loading,
     T Function(String message)? error,
-    T Function(List<TreeNode> nodes)? loaded,
+    T Function(List<TreeNode> nodes, List<TreeNode> filteredNodes,
+            List<String> activeFilters)?
+        loaded,
     required T Function() orElse,
   }) {
     return switch (this) {
       Initial() => initial?.call() ?? orElse(),
       Loading() => loading?.call() ?? orElse(),
-      Error(message: final assets) => error?.call(assets) ?? orElse(),
-      Loaded(nodes: final nodes) => loaded?.call(nodes) ?? orElse(),
+      Error(message: final message) => error?.call(message) ?? orElse(),
+      Loaded(
+        nodes: final nodes,
+        filteredNodes: final filtered,
+        activeFilters: final filters
+      ) =>
+        loaded?.call(nodes, filtered, filters) ?? orElse(),
     };
   }
 
@@ -57,8 +64,14 @@ final class Loading extends AssetsPageState {
 
 final class Loaded extends AssetsPageState {
   final List<TreeNode> nodes;
+  final List<TreeNode> filteredNodes;
+  final List<String> activeFilters;
 
-  const Loaded(this.nodes);
+  const Loaded(
+    this.nodes, {
+    this.filteredNodes = const [],
+    this.activeFilters = const [],
+  });
 }
 
 final class Error extends AssetsPageState {
