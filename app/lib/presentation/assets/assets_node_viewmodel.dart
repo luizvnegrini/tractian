@@ -3,6 +3,20 @@ import 'package:flutter/widgets.dart';
 
 import '../../domain/domain.dart';
 
+class FlatNode {
+  final TreeNode node;
+  final int depth;
+  final List<TreeNode> scopingNodes;
+  final bool isExpanded;
+
+  FlatNode(
+    this.node,
+    this.depth,
+    this.scopingNodes,
+    this.isExpanded,
+  );
+}
+
 class AssetsNodeViewModel {
   static const iconSize = 22.0;
 
