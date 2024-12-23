@@ -186,5 +186,30 @@ void main() {
         return hasEnergySensor && hasCritical;
       }), true);
     });
+
+    test('should return complete node with all children when node matches',
+        () async {
+      final result = await searchUsecase(testNodes, 'Assembly Line', []);
+
+      expect(result.length, 1);
+      final assemblyNode = result.first.children.first;
+      expect(assemblyNode.name, 'Assembly Line');
+
+      // Verifica se manteve todos os filhos originais
+      expect(assemblyNode.children.length, 2);
+      expect(
+        assemblyNode.children.map((c) => c.name).toList(),
+        ['Temperature Sensor', 'Vibration Monitor'],
+      );
+
+      // Verifica se os filhos mantiveram suas informações
+      final tempSensor = assemblyNode.children.first;
+      expect(tempSensor.componentInfo?.sensorType, SensorType.energy);
+      expect(tempSensor.componentInfo?.status, Status.operating);
+
+      final vibSensor = assemblyNode.children.last;
+      expect(vibSensor.componentInfo?.sensorType, SensorType.vibration);
+      expect(vibSensor.componentInfo?.status, Status.alert);
+    });
   });
 }

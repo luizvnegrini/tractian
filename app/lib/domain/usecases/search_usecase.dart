@@ -48,7 +48,7 @@ class SearchUsecaseImpl implements SearchUsecase {
         name: node.name,
         type: node.type,
         componentInfo: node.componentInfo,
-        children: matchedChildren,
+        children: currentNodeMatches ? node.children : matchedChildren,
       );
     }
 
