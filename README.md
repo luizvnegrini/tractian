@@ -3,6 +3,7 @@
 This project is a simple Flutter application developed for a technical test for Tractian. 
 
 # Demo
+https://github.com/user-attachments/assets/8f028b04-97dc-4d75-985f-405ce3644225
 
 ## Main Technologies
 - Flutter
